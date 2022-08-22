@@ -1,16 +1,22 @@
 package br.com.pizzaria.model;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import br.com.pizzaria.controller.dto.DisponibilidadeIngredienteDto;
+import br.com.pizzaria.controller.dto.IngredienteDto;
 
 
 /**
@@ -25,21 +31,23 @@ public class Ingrediente {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
+	private Long id;
 	
-	@Column
+	@Column(length = 300)
 	private String nome;
 	
+	@Enumerated(EnumType.STRING)
+	@Column(length = 3)
 	private SimNaoEnum ativo;
 	
 	@OneToMany(mappedBy = "ingrediente", cascade = CascadeType.ALL)
 	private List<DisponibilidadeIngrediente> historicoDisponibilidade;
-		
-	public Integer getId() {
+
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -66,6 +74,20 @@ public class Ingrediente {
 	public void setHistoricoDisponibilidade(List<DisponibilidadeIngrediente> historicoDisponibilidade) {
 		this.historicoDisponibilidade = historicoDisponibilidade;
 	}
+	
+	public IngredienteDto converterParaDto() {
+		
+		IngredienteDto dto = new IngredienteDto();
+		
+		dto.setId(this.id);
+		dto.setNome(this.nome);
+		dto.setDisponibilidadeIngrediente(new ArrayList<DisponibilidadeIngredienteDto>());
+		this.historicoDisponibilidade.forEach(d -> dto.getDisponibilidadeIngrediente().add(d.converterParaDto()));
+		dto.setAtivo(this.ativo);
+		
+		return dto;
+	}
+	
 
 	@Override
 	public int hashCode() {

@@ -1,10 +1,13 @@
 package br.com.pizzaria.model;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.Objects;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -12,7 +15,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import org.springframework.format.annotation.DateTimeFormat;
+import br.com.pizzaria.controller.dto.DisponibilidadeIngredienteDto;
+import br.com.pizzaria.service.IngredienteService;
+import br.com.pizzaria.util.FormatadorData;
 
 
 /**
@@ -28,24 +33,43 @@ public class DisponibilidadeIngrediente {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
+	private Long id;
 	
 	@ManyToOne
 	@JoinColumn(name="ingrediente_id", nullable = false	)	
 	private Ingrediente ingrediente;
 	
-	@Column(name = "DATA_INICIAL")
 	LocalDate dataInicial;
 	
 	LocalDate dataFinal;
 	
+	@Enumerated(EnumType.STRING)
+	@Column(length = 3)
 	SimNaoEnum atual;
 
-	public Integer getId() {
+	public DisponibilidadeIngrediente() {
+		
+	}
+	
+	public DisponibilidadeIngrediente(Ingrediente ingrediente, LocalDate dataInicial, LocalDate dataFinal,
+			SimNaoEnum atual) {
+	
+		this.ingrediente = ingrediente;
+		
+		LocalDate hoje = LocalDate.now();
+		DateTimeFormatter formatador = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+		String data = hoje.format(formatador);
+		LocalDate dataFormatada = LocalDate.parse(data, formatador);
+		
+		this.dataInicial = dataFormatada;
+		this.atual = atual;
+	}
+
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -85,6 +109,21 @@ public class DisponibilidadeIngrediente {
 	public int hashCode() {
 		return Objects.hash(atual, dataFinal, dataInicial, id, ingrediente);
 	}
+
+	public DisponibilidadeIngredienteDto converterParaDto() {
+		DisponibilidadeIngredienteDto dto = new DisponibilidadeIngredienteDto();
+		dto.setId(this.id);
+		dto.setDataInicial(FormatadorData.LocalDateParaString(this.dataInicial));
+		dto.setDataFinal(FormatadorData.LocalDateParaString(this.dataFinal));
+		dto.setAtual(this.atual);		
+		
+		if(this.ingrediente != null) {
+			dto.setIdIngrediente(this.ingrediente.getId());
+		}
+		
+		return dto;
+	}
+	
 
 	@Override
 	public boolean equals(Object obj) {

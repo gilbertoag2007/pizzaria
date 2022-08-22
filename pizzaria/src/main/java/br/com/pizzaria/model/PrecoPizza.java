@@ -3,7 +3,10 @@ package br.com.pizzaria.model;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -29,10 +32,13 @@ public class PrecoPizza {
 	@JoinColumn(name = "idPizza")
 	private Pizza pizza;
 	
+	@Column(precision = 3, scale = 2)
 	private BigDecimal preco;
 	
 	private LocalDate data;
 	
+	@Enumerated(EnumType.STRING)
+	@Column(length = 3)
 	private SimNaoEnum atual;
 
 	public Long getId() {

@@ -5,6 +5,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,23 +26,24 @@ public class Pedido {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
+	private Long id;
 	
 	@Embedded
 	private List<ItemPedido> listaItens;
 	
 	private LocalDateTime dataHoraPedido;
 	
+	@Column(precision = 4, scale = 2)
 	private BigDecimal totalPedido;
 	
+	@Column(length = 1000)
 	private String observacoes;
 
-
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

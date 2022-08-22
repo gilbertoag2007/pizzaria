@@ -3,7 +3,10 @@ package br.com.pizzaria.model;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -24,10 +27,13 @@ public class Pizza {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
+	private Long id;
 	
+	@Column(length = 300)
 	private String nome;
 	
+	@Enumerated(EnumType.STRING)
+	@Column(length = 20)
 	private TamanhoPizzaEnum tamanho;
 	
 	@ManyToMany
@@ -36,12 +42,11 @@ public class Pizza {
 	@OneToMany
 	private List <PrecoPizza> historicoPrecos;
 
-	
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 

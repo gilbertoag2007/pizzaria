@@ -3,6 +3,7 @@ package br.com.pizzaria.model;
 import java.util.List;
 import java.util.Objects;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -24,28 +25,34 @@ public class Entrega {
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	private Integer id;
+	private Long id;
 	
 	@OneToMany
 	private List<Pizza> pizza;
 	
-	private Integer CEP;
+	@Column(precision = 8)
+	private Long CEP;
 	
+	@Column(length = 500)
 	private String endereco;
 	
+	@Column(length = 20)
 	private String numero;
 	
+	@Column(length = 100)
 	private String complemento;
 	
+	@Column(length = 200)
 	private String bairro;
 	
+	@Column(length = 200)
 	private String cidade;
 
-	public Integer getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(Integer id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
@@ -57,11 +64,11 @@ public class Entrega {
 		this.pizza = pizza;
 	}
 
-	public Integer getCEP() {
+	public Long getCEP() {
 		return CEP;
 	}
 
-	public void setCEP(Integer cEP) {
+	public void setCEP(Long cEP) {
 		CEP = cEP;
 	}
 
@@ -125,12 +132,6 @@ public class Entrega {
 				&& Objects.equals(numero, other.numero) && Objects.equals(pizza, other.pizza);
 	}
 
-	@Override
-	public String toString() {
-		return "Entrega [id=" + id + ", pizza=" + pizza + ", CEP=" + CEP + ", endereco=" + endereco + ", numero="
-				+ numero + ", complemento=" + complemento + ", bairro=" + bairro + ", cidade=" + cidade + "]";
-	}
-	
 	
 
 }
